@@ -1,0 +1,23 @@
+{% extends 'library/base.html' %}
+{% block content %}
+<div class="profile">
+{% if officer.pic %}
+<div class="about__img img">
+    <img src="{{officer.pic.url}}" alt="">
+</div>
+{% else %}
+<div class="about__img img">
+    <img src="/static/avatar/images.png" alt="">
+</div>
+{% endif %}
+<p><h1>{{officer.name|title}}</h1></p>
+<p>Bangladesh Army No: {{officer.BA_no}}</p>
+<p>Date Joined: {{officer.date_joined}}</p>
+<a  href="{% url 'library:officer-update' officer.id%}">Edit Profile</a>
+</div>
+{% endblock content %}
+
+
+
+
+

@@ -55,12 +55,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     name = models.CharField(max_length=60, unique=False)
     username = models.CharField(max_length=30, unique=True)
-    enrollment_no = models.IntegerField(
-        unique=True, default=random.randint(10000, 99999))
+    BA_no = models.IntegerField(
+        unique=True,null=True)
     date_joined = models.DateTimeField(
         verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
-    pic = models.ImageField(blank=True, upload_to='students')
+    pic = models.ImageField(blank=True, upload_to='officers')
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -127,35 +127,38 @@ class Book(models.Model):
 
 
 # relation containing info about Borrowed books
-# it has  foriegn key book and student for refrencing book and student
-# roll_no is used for identifing students
+# it has  foriegn key book and officer for refrencing book and officer
+# roll_no is used for identifing officers
 # if a book is returned than corresponding tuple is deleted from database
+from dateutil import parser
 class Borrower(models.Model):
     id = models.UUIDField(primary_key=True, unique=True,
                           default=uuid.uuid4, editable=False)
-    student = models.ForeignKey('Account', on_delete=models.CASCADE)
+    officer = models.ForeignKey('Account', on_delete=models.CASCADE)
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     issue_date = models.DateField(
         null=True, blank=True, help_text='YYYY-MM-DD', default=date.today)
     return_date = models.DateField(
-        null=True, blank=True, help_text='YYYY-MM-DD')
+        null=True, blank=True, help_text='YYYY-MM-DD', default=date.today)
 
     def __str__(self):
-        return self.student.name.title()+" borrowed "+self.book.title.title()
+        return self.officer.name.title()+" borrowed "+self.book.title.title()
 
-    def fine(self):
-        today = date.today()
-        fine = 0
-        if self.return_date <= today:
-            fine += 5 * (today - self.return_date).days
-        return fine
+    # def fine(self):
+    #     today = date.today()
+    #     fine = 0
+    #     # new_date = parser.parse(self.return_date)
+    #     new_date = datetime.strptime(self.return_date, '%d.%m.%Y')
+    #     if new_date <= today:
+    #         fine += 5 * (today - self.return_date).days
+    #     return fine
 
 
 class InformationForm(models.Model):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     name = models.CharField(max_length=60, unique=False)
     username = models.CharField(max_length=30, unique=True)
-    student = models.BooleanField(default=False)
+    officer = models.BooleanField(default=False)
 
     def __str__(self):
         return self.email

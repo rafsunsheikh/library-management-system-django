@@ -8,8 +8,8 @@
     <a href="{% url 'library:borrower-list' %}">&#8592;Back</a>
     <form method="POST" action="">
     {%csrf_token%}
-    <label >{{form.student.label}} </label>
-    {{form.student}} 
+    <label >{{form.officer.label}} </label>
+    {{form.officer}} 
     
     <label >{{form.book.label}} </label>
     {{form.book}} 

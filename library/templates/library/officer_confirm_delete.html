@@ -4,13 +4,13 @@
 
 
 <div >
-    <a href="{% url 'library:student-list' %}">&#8592;Back</a>
+    <a href="{% url 'library:officer-list' %}">&#8592;Back</a>
 </div>
 
 <div >
     <form method = "POST">
         {%csrf_token%}
-        <p>Are you sure you want to remove '{{student|title}}'?</p>
+        <p>Are you sure you want to remove '{{officer|title}}'?</p>
         <input class="button" type="submit" value="Submit">
         </form>
 </div>

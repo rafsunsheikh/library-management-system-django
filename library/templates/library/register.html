@@ -4,7 +4,7 @@
 
 
 <div class="card-body">
-    <a href="{% url 'library:student-list' %}">&#8592;Back</a>
+    <a href="{% url 'library:officer-list' %}">&#8592;Back</a>
     <form method="POST" enctype="multipart/form-data" action="">
         {%csrf_token%}
         
@@ -17,8 +17,8 @@
         <label >{{form.username.label}} </label>
         {{form.username}} 
         
-        <label >{{form.enrollment_no.label}}</label>
-        {{form.enrollment_no}} 
+        <label >{{form.BA_no.label}}</label>
+        {{form.BA_no}} 
         
         <label >{{form.password1.label}} <span>(8 characters & alphanumeric)</span></label> 
         {{form.password1}}  

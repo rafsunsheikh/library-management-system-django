@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th scope="col">SN</th>
-      <th scope="col">Student Name</th>
+      <th scope="col">officer Name</th>
       <th scope="col">Book</th>
       <th scope="col">Return Date</th>
       <th scope="col">Fine</th>
@@ -17,7 +17,7 @@
     {% for borrower in borrowers %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
-      <td>{{borrower.student.name}}</td>
+      <td>{{borrower.officer.name}}</td>
       <td>{{borrower.book.title}}</td>
       <td>{{borrower.return_date}}</td>
       <td>{{borrower.fine}}</td>

@@ -36,7 +36,7 @@ class InformationView(CreateView):
     template_name='library/information_form.html'
     model=InformationForm
     context_object_name="account_register"
-    fields=['email', 'name', 'username', 'student']
+    fields=['email', 'name', 'username', 'officer']
     success_url=reverse_lazy('library:login')
 
     def form_valid(self, form):
@@ -118,60 +118,60 @@ class BookDelete(LoginRequiredMixin,UserAccessMixin,  DeleteView):
 
 
 
-class StudentView(LoginRequiredMixin, UserAccessMixin, ListView):
+class officerView(LoginRequiredMixin, UserAccessMixin, ListView):
     model=Account
-    context_object_name='students'
-    permission_required = 'students.view_students'
-    template_name='library/student_list.html'
+    context_object_name='officers'
+    permission_required = 'officers.view_officers'
+    template_name='library/officer_list.html'
 
     def get_context_data(self,  *args,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['students']=context['students'].exclude(is_admin=True)
+        context['officers']=context['officers'].exclude(is_admin=True)
         search_input=self.request.GET.get('search-area') or ''
         if search_input:
-            context['students']=context['students'].filter(name__startswith=search_input)
+            context['officers']=context['officers'].filter(name__startswith=search_input)
 
         context['search_input']=search_input
 
         return context
 
-class StudentDetail(LoginRequiredMixin, DetailView):
+class officerDetail(LoginRequiredMixin, DetailView):
     model=Account
-    context_object_name='student'
-    template_name='library/student.html'
+    context_object_name='officer'
+    template_name='library/officer.html'
 
 
 
 
-class StudentCreate(UserAccessMixin, CreateView):
+class officerCreate(UserAccessMixin, CreateView):
     template_name = 'library/register.html'
     form_class = RegistrationForm
     permission_required = 'users.add_users'
-    success_url = reverse_lazy('library:student-list')
+    success_url = reverse_lazy('library:officer-list')
 
     def form_valid(self, form):
         form.instance.user=self.request.user
-        return super(StudentCreate, self).form_valid(form)
+        return super(officerCreate, self).form_valid(form)
 
 
-class StudentUpdate(LoginRequiredMixin, UpdateView):
+class officerUpdate(LoginRequiredMixin, UpdateView):
     form_class = AccountUpdateForm
-    template_name = 'library/student_update.html'
+    template_name = 'library/officer_update.html'
     model = Account
-    success_url=reverse_lazy('library:student-list')
+    success_url=reverse_lazy('library:officer-list')
     
 
     def form_valid(self, form):
         user = form.save()
-        return super(StudentUpdate, self).form_valid(form)
+        return super(officerUpdate, self).form_valid(form)
 
-class StudentDelete(LoginRequiredMixin,UserAccessMixin,  DeleteView):
+class officerDelete(LoginRequiredMixin,UserAccessMixin,  DeleteView):
     model=Account
-    template_name = 'library/student_confirm_delete.html'
+    template_name = 'library/officer_confirm_delete.html'
     permission_required = 'users.delete_users'
-    context_object_name='student'
+    context_object_name='officer'
     fields='__all__'
-    success_url=reverse_lazy('library:student-list')
+    success_url=reverse_lazy('library:officer-list')
 
 
 class BorrowerView(LoginRequiredMixin, ListView):
@@ -185,7 +185,7 @@ class BorrowerView(LoginRequiredMixin, ListView):
         if self.request.user.is_admin or self.request.user.is_superuser:
             context['borrowers']=context['borrowers']
         else:
-            context['borrowers']=context['borrowers'].filter(student = self.request.user.id)
+            context['borrowers']=context['borrowers'].filter(officer = self.request.user.id)
 
 
         return context
@@ -203,7 +203,7 @@ class BorrowerCreate(LoginRequiredMixin, UserAccessMixin, CreateView):
         instance = form.save(commit=False)
         instance.user = self.request.user
         book = Book.objects.get(id=instance.book.id)
-        student = Account.objects.get(id=instance.student.id)
+        officer = Account.objects.get(id=instance.officer.id)
         #get the book id from the form and check if the book is still available, then subtract.
         if book.available_copies > 0:
            book.available_copies -= 1
